@@ -14,6 +14,8 @@ K-Means均值聚类：源码实现.
 
 PCA主要成分分析, Python实现源码
 
+Expectation Maximization 算法的h高斯混合模型(GMM)实现
+
 杨一帆,University of Southern California
 
 
