@@ -38,26 +38,31 @@ def gmm(file, K_or_centroids):
     ## Generate Initial Centroids  
     threshold = 1e-15
     dataMat = mat(loadDataSet(file))
+    #mat是将数组转化成矩形
     [N, D] = shape(dataMat)
+    #shape means meature the range of the matrix
     K_or_centroids = 2
     # K_or_centroids可以是一个整数，也可以是k个质心的二维列向量
     if shape(K_or_centroids)==(): #if K_or_centroid is a 1*1 number  
         K = K_or_centroids
         Rn_index = range(N)
         random.shuffle(Rn_index) #random index N samples  
+        # random.shuffle 是指随机排序列表
         centroids = dataMat[Rn_index[0:K], :]; #generate K random centroid  
+        # 这里就是生成一个K行D列的矩阵，是从datamMat里面随机选的K行来当初始的质心
     else: # K_or_centroid is a initial K centroid  
         K = size(K_or_centroids)[0];   
         centroids = K_or_centroids;  
 
     ## initial values  
     [pMiu,pPi,pSigma] = init_params(dataMat,centroids,K,N,D)      
-    Lprev = -inf #上一次聚类的误差  
+    Lprev = -inf #上一次聚类的误差
+     #???
 
     # EM Algorithm  
     while True:
         # Estimation Step  
-        Px = calc_prob(pMiu,pSigma,dataMat,K,N,D)
+        Px = calc_prob(pMiu,pSigma,dataMat,K,N,D)#调用h后面定义的函数得到N组测试数据在K个l类中的概率分别是多少是一个N by ks的矩阵
 
         # new value for pGamma(N*k), pGamma(i,k) = Xi由第k个Gaussian生成的概率  
         # 或者说xi中有pGamma(i,k)是由第k个Gaussian生成的  
@@ -101,11 +106,13 @@ def init_params(X,centroids,K,N,D):
     distmat = tile(sum(power(X,2), 1),(1, K)) + \
         tile(transpose(sum(power(pMiu,2), 1)),(N, 1)) -  \
         2*X*transpose(pMiu)
+        #tile 这个函数是按照后面括号中的形式吧前面的数组或者矩阵复制扩充有点像matlab中的rapmat
     labels = distmat.argmin(1) #Return the minimum from each row  
 
     # 获取k类的pPi和协方差矩阵
     for k in range(K):
         boolList = (labels==k).tolist()
+        #tolist()是将矩阵转换成列表
         indexList = [boolList.index(i) for i in boolList if i==[True]]
         Xk = X[indexList, :]
         #print cov(Xk)
