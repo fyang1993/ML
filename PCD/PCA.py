@@ -1,7 +1,6 @@
 """
 Created on Sun Feb 28 10:04:26 2016
 PCA source code
-@author: liudiwei
 """
 
 import numpy as np
